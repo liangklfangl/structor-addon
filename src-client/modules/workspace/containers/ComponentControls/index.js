@@ -1,97 +1,99 @@
-/*
- * Copyright 2017 Alexander Pustovalov
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-import React, { Component, PropTypes } from 'react';
-import { connect } from 'react-redux';
-import { modelSelector } from './selectors.js';
-import { containerActions } from './actions.js';
+import React, { Component, PropTypes } from "react";
+import { connect } from "react-redux";
+import { modelSelector } from "./selectors.js";
+import { containerActions } from "./actions.js";
 
 const buttonLabelStyle = {
-    margin: '0 0.5em'
+  margin: "0 0.5em"
 };
 
 class Container extends Component {
+  constructor(props) {
+    super(props);
+    this.onEdit = this.onEdit.bind(this);
+    this.onGenerate = this.onGenerate.bind(this);
+    this.onSaveDefaultModel = this.onSaveDefaultModel.bind(this);
+  }
 
-    constructor(props) {
-        super(props);
-        this.onEdit = this.onEdit.bind(this);
-        this.onGenerate = this.onGenerate.bind(this);
-        this.onSaveDefaultModel = this.onSaveDefaultModel.bind(this);
-    }
+  /**
+   * 
+   * @param {*} e
+   * 编辑组件数据，弹出弹窗+修改props 
+   */
+  onEdit(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    const { currentComponent, loadOptionsAndShowModal } = this.props;
+    loadOptionsAndShowModal(currentComponent);
+  }
 
-    onEdit(e) {
-        e.stopPropagation();
-        e.preventDefault();
-        const {currentComponent, loadOptionsAndShowModal} = this.props;
-        loadOptionsAndShowModal(currentComponent);
-    }
+  /**
+   * 
+   * @param {*} e 
+   * loadGenerators
+   */
+  onGenerate(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    const { loadGenerators } = this.props;
+    loadGenerators();
+  }
 
-    onGenerate(e) {
-        e.stopPropagation();
-        e.preventDefault();
-        const {loadGenerators} = this.props;
-        loadGenerators();
-    }
+  /**
+   * 
+   * @param {*} e
+   * 保存数据 
+   */
+  onSaveDefaultModel(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    const { showSaveDefaultModelModal } = this.props;
+    showSaveDefaultModelModal();
+  }
 
-    onSaveDefaultModel(e) {
-        e.stopPropagation();
-        e.preventDefault();
-        const {showSaveDefaultModelModal} = this.props;
-        showSaveDefaultModelModal();
-    }
-
-    render(){
-        const {currentComponent} = this.props;
-        return (
-            <div style={this.props.style} className="btn-group" role="group">
-                <button
-                    className="btn btn-default btn-xs"
-                    disabled={!currentComponent}
-                    onClick={this.onEdit}
-                    title="Show selected component options">
-                    <span style={buttonLabelStyle}>
-                        <i className="fa fa-wrench"/>
-                        <span style={{marginLeft: '0.5em'}}>Edit</span>
-                    </span>
-                </button>
-                <button
-                    className="btn btn-default btn-xs"
-                    disabled={!currentComponent}
-                    onClick={this.onGenerate}
-                    title="Generate the source code for a new component">
-                    <span style={buttonLabelStyle}>
-                        <i className="fa fa-magic"/>
-                        <span style={{marginLeft: '0.5em'}}>Generate Component</span>
-                    </span>
-                </button>
-                <button
-                    className="btn btn-default btn-xs"
-                    disabled={!currentComponent}
-                    onClick={this.onSaveDefaultModel}
-                    title="Save current component model as a variant">
-                    <span style={buttonLabelStyle}>
-                        <i className="fa fa-bookmark-o"/>
-                        <span style={{marginLeft: '0.5em'}}>Save Model</span>
-                    </span>
-                </button>
-            </div>
-        );
-    }
+  render() {
+    const { currentComponent } = this.props;
+    return (
+      <div style={this.props.style} className="btn-group" role="group">
+        {/* 编辑按钮 */}
+        <button
+          className="btn btn-default btn-xs"
+          disabled={!currentComponent}
+          onClick={this.onEdit}
+          title="Show selected component options"
+        >
+          <span style={buttonLabelStyle}>
+            <i className="fa fa-wrench" />
+            <span style={{ marginLeft: "0.5em" }}>Edit</span>
+          </span>
+        </button>
+        {/* 产生组件 */}
+        <button
+          className="btn btn-default btn-xs"
+          disabled={!currentComponent}
+          onClick={this.onGenerate}
+          title="Generate the source code for a new component"
+        >
+          <span style={buttonLabelStyle}>
+            <i className="fa fa-magic" />
+            <span style={{ marginLeft: "0.5em" }}>Generate Component</span>
+          </span>
+        </button>
+        {/* 保存Model数据 */}
+        <button
+          className="btn btn-default btn-xs"
+          disabled={!currentComponent}
+          onClick={this.onSaveDefaultModel}
+          title="Save current component model as a variant"
+        >
+          <span style={buttonLabelStyle}>
+            <i className="fa fa-bookmark-o" />
+            <span style={{ marginLeft: "0.5em" }}>Save Model</span>
+          </span>
+        </button>
+      </div>
+    );
+  }
 }
 
-
 export default connect(modelSelector, containerActions)(Container);
-

@@ -7,7 +7,7 @@
     "build-server": "gulp --gulpfile ./build-conf/gulpfile.js build-server",
     "build-server-dev": "gulp --gulpfile ./build-conf/gulpfile.js build-server-dev",
     "build-client-less": "gulp --gulpfile ./build-conf/gulpfile.js build-client-less",
-    "build-client": "webpack --config ./build-conf/webpack.config.js --progress",
+    "build-client": "webpack --config ./build-conf/webpack.config.js --progress -w",
     "build-client-dev": "webpack --config ./build-conf/webpack-dev.config.js --progress --watch",
     "postinstall": "node ./postexec.js"
   },

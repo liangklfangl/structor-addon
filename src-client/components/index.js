@@ -39,3 +39,4 @@ export StyleNumberInput from './StyleNumberInput';
 export StyleOptionSelect from './StyleOptionSelect';
 export StyleSizeInput from './StyleSizeInput';
 export StyleSwatchesPicker from './StyleSwatchesPicker';
+export SelectOptionCnpt from "./SelectOptionCnpt";

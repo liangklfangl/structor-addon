@@ -1,19 +1,3 @@
-/*
- * Copyright 2017 Alexander Pustovalov
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {forOwn, isObject, isEmpty} from 'lodash';
@@ -322,36 +306,9 @@ class Container extends Component {
 		let libGroups = [];
 
 		const filterString = filter ? filter.toUpperCase() : null;
-		// todo: check if it's really needed
-		// if (!filter && recentlyUsed && recentlyUsed.length > 0) {
-		// 	let collapsed = "";
-		// 	if (expandedGroupKeys[recentGroupKey] === true) {
-		// 		collapsed = "in";
-		// 	}
-		// 	let components = [];
-		// 	recentlyUsed.forEach((recentItem, index) => {
-		// 		let componentDef = undefined;
-		// 		try {
-		// 			componentDef = utilsStore.findComponentDef(
-		// 				componentTree, recentItem.componentName, recentItem.namespace
-		// 			);
-		// 			const {defaults} = componentDef;
-		// 			let componentKey = 'recent' + recentItem.componentName + recentItem.namespace;
-		// 			const isExpandedComponent = expandedComponentKeys[componentKey];
-		// 			components = components.concat(
-		// 				this.createListItems(componentKey, defaults, isExpandedComponent, recentItem.componentName, recentItem.namespace)
-		// 			);
-		// 		} catch (e) {
-		// 			// do nothing
-		// 		}
-		// 	});
-		// 	libGroups.push(
-		// 		this.createGroupingPanel(recentGroupKey, 'Recently Used', components, collapsed, false)
-		// 	);
-		// }
 
 		const {htmlComponents, components, modules} = componentTree;
-
+		console.log('左侧的菜单的componentTree===',componentTree);
 		// No group components
 		if (components && !isEmpty(components)) {
 			let noGroupItems = [];
