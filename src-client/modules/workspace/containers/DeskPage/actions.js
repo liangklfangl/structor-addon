@@ -33,7 +33,12 @@ import {
   popHistory
 } from "modules/workspace/containers/HistoryControls/actions";
 import { showModal as showQuickAppend } from "modules/workspace/containers/QuickAppendModal/actions";
-import { changeOptionDragResize as changeOptionDrag } from "modules/workspace/containers/ComponentOptionsPanel/actions";
+import {
+  changeOptionDragResize as changeOptionDrag,
+  changeOption
+} from "modules/workspace/containers/ComponentOptionsPanel/actions";
+import { showContextMenuModal } from "modules/workspace/containers/ContextMenuModel/actions.js";
+// context menu
 export const SET_PAGES = "DeskPage/SET_PAGES";
 export const RELOAD_PAGE = "DeskPage/RELOAD_PAGE";
 export const LOAD_PAGE = "DeskPage/LOAD_PAGE";
@@ -70,6 +75,15 @@ export const executeReloadPageRequest = () => ({
   type: EXECUTE_RELOAD_PAGE_REQUEST
 });
 
+/**
+ * 显示context menu
+ */
+export const showContextMenuSetting = (isShow, addOn = {}) => (
+  dispatch,
+  getState
+) => {
+  dispatch(showContextMenuModal(isShow, addOn));
+};
 export const updatePage = () => ({ type: UPDATE_PAGE });
 // 更新页面
 export const updateMarked = () => ({ type: UPDATE_MARKED });
@@ -250,12 +264,15 @@ export const containerActions = dispatch =>
       pasteFirst,
       pasteLast,
       pasteReplace,
+      showContextMenuModal: showContextMenuSetting,
       cloneSelected,
       deleteSelected,
       showQuickAppend,
       popHistory,
-      changeOptionDrag
+      changeOptionDrag,
       // 因为拖动导致元素的props值发送变化
+      changeOption
+      // 修改prop并让组件重新渲染
     },
     dispatch
   );

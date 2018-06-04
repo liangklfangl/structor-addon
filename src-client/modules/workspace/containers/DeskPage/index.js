@@ -70,8 +70,7 @@ class Container extends Component {
       // 所有的页面记录在iframe的window对象上面
       this.contentWindow.onPageDidMount = page => {
         this.page = page;
-        // 这些方法在.structor/src/PageForDesk.js中设置了，webpack会监听整个文件的变化
-        page.bindOnComponentMouseDown(this.handleComponentClick);
+
         page.bindOnPathnameChanged(this.handlePathnameChanged);
         page.bindGetPagePath(pathname => graphApi.getPagePath(pathname));
         // 监听pathname改变，得到新的在服务端存在的pathname数据，然后给客户端重新加载新的路由
@@ -79,12 +78,36 @@ class Container extends Component {
           graphApi.getWrappedModelByPagePath(pathname)
         );
         /**
-         * 拖动的时候宽度和高度变化保存数据
+         * 情况3:拖动的时候宽度和高度变化保存数据
          */
         page.bindDragSizeChange(position => {
-          console.log(" server client bindDragSizeChange", position);
           this.props.changeOptionDrag &&
             this.props.changeOptionDrag({ key: position.key }, position);
+        });
+
+        /**
+         * 情况4:枚举类型直接选择
+         */
+        page.bindEnumContextMenuSelect((componentKey, key, label) => {
+          console.log("structor接受的值为===", componentKey, key, label);
+          this.props.changeOption(
+            {
+              key: componentKey
+            },
+            {
+              [key]: label
+            }
+          );
+        });
+        /**
+          * 情况2:组件被点击的弹窗
+          */
+        page.bindOnComponentMouseDown(this.handleComponentClick);
+        /**
+         * 情况1:如果选中了右键面板的某一个值的时候触发:一般弹出弹窗+设置值
+         */
+        page.bindPropSelectChange((componentKey, key, label) => {
+          this.handleRightMenuItemClick(componentKey, key, label);
         });
 
         page.bindGetMarked(pathname =>
@@ -230,12 +253,12 @@ class Container extends Component {
      * 保存数据更新
      */
   shouldComponentUpdate(nextProps, nextState) {
-    // console.log(
-    //   "Deskpage的shouldComponentUpdate被调用~~~~",
-    //   nextProps,
-    //   nextState,
-    //   componentModel
-    // );
+    console.log(
+      "Deskpage的shouldComponentUpdate被调用~~~~",
+      nextProps,
+      nextState,
+      componentModel
+    );
     const { componentModel } = this.props;
     const { componentModel: newComponentModel } = nextProps;
     const shouldUpate =
@@ -245,10 +268,8 @@ class Container extends Component {
         componentModel.markedUpdateCounter ||
       newComponentModel.modelUpdateCounter !==
         componentModel.modelUpdateCounter;
-    // console.log("shouldUpate====", shouldUpate);
     return shouldUpate;
   }
-
   componentDidUpdate() {
     this.setupShortcuts();
     console.log("更新了啦啦啦啦", this.page, this.doUpdatePageModel, this.props);
@@ -288,6 +309,24 @@ class Container extends Component {
       // 否则要设置被选中的组件
       setSelectedKey(key, isModifier);
     }
+  }
+
+  /**
+   * 组件的右键要求设置组件的值
+   */
+  handleRightMenuItemClick(componentKey, key, label) {
+    // loadOptionsAndShowModal(componentKey);
+    // debugger;
+    console.log(
+      "this.props.showContextMenuModal====",
+      this.props.showContextMenuModal
+    );
+    // 显示context menu
+    this.props.showContextMenuModal(true, {
+      componentKey,
+      key,
+      label
+    });
   }
 
   /**

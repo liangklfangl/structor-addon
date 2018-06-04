@@ -68,16 +68,18 @@ export const changeOptionDragResize = (componentObject, optionObject) => (
     // 原来的props
     let newProps = merge({}, oldProps, optionObject);
     // 没有style直接删除
+    if (newProps.combinedProps) {
+      delete newProps.combinedProps;
+    }
     if (newProps.style && isEmpty(newProps.style)) {
       delete newProps.style;
     } else {
+      // 如果style有设置
       if (!newProps.style) {
         newProps.style = {};
       }
-      newProps.style.width = width + "px";
-      newProps.style.height = height + "px";
-      newProps.style.marginLeft = x + "px";
-      newProps.style.marginTop = y + "px";
+      newProps.style.width = width ? parseInt(width) + "px" : "0px";
+      newProps.style.height = height ? parseInt(height) + "px" : "0px";
     }
     dispatch(pushHistory());
     // 添加一条历史
@@ -100,7 +102,7 @@ export const changeOption = (componentObject, optionObject) => (
 ) => {
   const { key } = componentObject;
   let node = graphApi.getNode(key);
-  console.log("设置Style生效后的值为===", node);
+  console.log("changeOption调用后的值为===", node, optionObject);
   if (node) {
     let oldProps = node.modelNode.props || {};
     // 原来的props
@@ -109,6 +111,7 @@ export const changeOption = (componentObject, optionObject) => (
     if (newProps.style && isEmpty(newProps.style)) {
       delete newProps.style;
     }
+    console.log("changeOption调用后newProps的值为===", newProps);
     dispatch(pushHistory());
     // 添加一条历史
     node.modelNode.props = newProps;

@@ -14,7 +14,6 @@ const initialState = {
   markedUpdateCounter: 0,
   modelUpdateCounter: 0
 };
-
 /**
  * 页面优化
  */
@@ -87,7 +86,7 @@ export default (state = initialState, action = {}) => {
   }
 
   if (type === actions.SET_LIVE_PREVIEW_MODE_ON) {
-    console.log("预览效果的值为==",state);
+    console.log("预览效果的值为==", state);
     return Object.assign({}, state, {
       isEditModeOn: false,
       isLivePreviewModeOn: true,
@@ -120,6 +119,7 @@ export default (state = initialState, action = {}) => {
    * 页面更新
    */
   if (type === actions.UPDATE_PAGE) {
+    console.log("更新页面的值为====", state);
     return Object.assign({}, state, {
       modelUpdateCounter: state.modelUpdateCounter + 1
     });
