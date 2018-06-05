@@ -25,6 +25,7 @@ export const containerActions = dispatch =>
       reloadPage,
       setEditModeOn,
       setLivePreviewModeOn,
+      // 预览模式
       saveProject,
       toggleLibraryPanel,
       // 左侧的组件数据

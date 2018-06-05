@@ -298,17 +298,18 @@ class Container extends Component {
       currentComponent
     } = this.props;
     console.log("处理组件被点击的逻辑---", key, isModifier, this.props);
-    if (
-      selectedKeys &&
-      selectedKeys.length > 0 &&
-      includes(selectedKeys, key)
-    ) {
-      // 如果选中的这个组件已经被添加过了，那么表示它有数据
-      loadOptionsAndShowModal(currentComponent);
-    } else {
-      // 否则要设置被选中的组件
-      setSelectedKey(key, isModifier);
-    }
+    setSelectedKey(key, isModifier);
+    // if (
+    //   selectedKeys &&
+    //   selectedKeys.length > 0 &&
+    //   includes(selectedKeys, key)
+    // ) {
+    //   // 如果选中的这个组件已经被添加过了，那么表示它有数据
+    //   loadOptionsAndShowModal(currentComponent);
+    // } else {
+    //   // 否则要设置被选中的组件
+    //   setSelectedKey(key, isModifier);
+    // }
   }
 
   /**

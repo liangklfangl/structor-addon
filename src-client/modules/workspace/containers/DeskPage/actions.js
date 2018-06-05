@@ -69,6 +69,7 @@ export const changePageRoute = pagePath => ({
 });
 // 预览效果
 export const setLivePreviewModeOn = () => ({ type: SET_LIVE_PREVIEW_MODE_ON });
+// 设置预览效果
 export const setEditModeOn = () => ({ type: SET_EDIT_MODE_ON });
 export const setReloadPageRequest = () => ({ type: SET_RELOAD_PAGE_REQUEST });
 export const executeReloadPageRequest = () => ({
