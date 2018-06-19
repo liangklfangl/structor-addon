@@ -43,6 +43,7 @@ class Container extends Component {
         e.stopPropagation();
         e.preventDefault();
         const {changePageRoute} = this.props;
+        console.log('handleChangePath被调用了!!!!',e.currentTarget.dataset.path);
         const pagePath = e.currentTarget.dataset.path;
         changePageRoute(pagePath);
     }

@@ -21,6 +21,12 @@ export default (state = initialState, action = {}) => {
       showContextMenu: payload,
       addOn
     });
+  } else if (type === actions.SHOW_ACTION_DISPATCH_MODEL) {
+    // 行为组件+数据组件
+    return Object.assign({}, state, {
+      actionDispatchShow: payload,
+      addOn
+    });
   }
 
   return state;

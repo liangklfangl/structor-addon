@@ -44,9 +44,7 @@ class Container extends Component {
       domNode.src = "/structor-deskpage" + currentPagePath;
     }
     const { loadPage, pageLoaded } = this.props;
-    //
     const { setForCuttingKeys, setForCopyingKeys } = this.props;
-    //
     const {
       pasteBefore,
       pasteAfter,
@@ -70,7 +68,6 @@ class Container extends Component {
       // 所有的页面记录在iframe的window对象上面
       this.contentWindow.onPageDidMount = page => {
         this.page = page;
-
         page.bindOnPathnameChanged(this.handlePathnameChanged);
         page.bindGetPagePath(pathname => graphApi.getPagePath(pathname));
         // 监听pathname改变，得到新的在服务端存在的pathname数据，然后给客户端重新加载新的路由
@@ -85,6 +82,32 @@ class Container extends Component {
             this.props.changeOptionDrag({ key: position.key }, position);
         });
 
+        /**
+         * 情况5:设置组件的复杂属性，Table.columns
+         */
+        page.settingArrayObjectProps((componentKey, key, props) => {
+          this.handleRightMenuItemClickArrayObject(componentKey, key, props);
+          console.log(
+            "fuck fuck settingArrayObjectProps",
+            componentKey,
+            key,
+            props
+          );
+        });
+
+        /**
+         * 情况6:直接设置属性，而不用弹窗
+         */
+
+        page.settingPropsDirectly((componentKey, key, props) => {
+          this.settingPropsDirectly(componentKey, key, props);
+          console.log(
+            "fuck fuck settingPropsDirectly",
+            componentKey,
+            key,
+            props
+          );
+        });
         /**
          * 情况4:枚举类型直接选择
          */
@@ -104,7 +127,7 @@ class Container extends Component {
           */
         page.bindOnComponentMouseDown(this.handleComponentClick);
         /**
-         * 情况1:如果选中了右键面板的某一个值的时候触发:一般弹出弹窗+设置值
+         * 情况1:如果选中了右键面板的某一个非枚举类型时候触发:一般弹出弹窗+设置值
          */
         page.bindPropSelectChange((componentKey, key, label) => {
           this.handleRightMenuItemClick(componentKey, key, label);
@@ -117,7 +140,17 @@ class Container extends Component {
           return this.props.componentModel.isEditModeOn;
         });
 
-        // 绑定各种获取数据的事件
+        /**
+         * 选择一个行为组件+数据组件的弹窗
+         */
+        page.bindToState("dispatchAction", currentPath => {
+          console.log("dispatchAction~~~~", currentPath);
+          const { showActionDispatchModal } = this.props;
+          showActionDispatchModal(true, {
+            currentPath
+          });
+        });
+        //绑定各种事件到initialState中，然后从内部可以调用这些方法!
         page.bindToState("onLoadOptions", (key, isModifier) => {
           const { currentComponent } = this.props;
           loadOptionsAndShowModal(currentComponent);
@@ -134,7 +167,6 @@ class Container extends Component {
         page.bindToState("onDelete", (key, isModifier) => {
           deleteSelected();
         });
-
         page.bindToState("onBefore", (key, isModifier) => {
           const { clipboardIndicatorModel: { clipboardKeys } } = this.props;
           if (clipboardKeys && clipboardKeys.length > 0) {
@@ -193,7 +225,6 @@ class Container extends Component {
 
       const initPage = () => {
         this.contentWindow.__createPageDesk();
-        // 调用iframe的__createPageDesk
         wait(
           () => this.contentWindow.pageReadyState === "initialized",
           pageLoaded
@@ -291,6 +322,7 @@ class Container extends Component {
    *组件被点击的时候要获取该组件的所有配置
    */
   handleComponentClick(key, isModifier) {
+    console.log("组件被点击,,,,,", key, isModifier);
     const {
       selectionBreadcrumbsModel: { selectedKeys },
       setSelectedKey,
@@ -299,6 +331,16 @@ class Container extends Component {
     } = this.props;
     console.log("处理组件被点击的逻辑---", key, isModifier, this.props);
     setSelectedKey(key, isModifier);
+    // if (
+    //   selectedKeys &&
+    //   selectedKeys.length > 0 &&
+    //   includes(selectedKeys, key)
+    // ) {
+    //   loadOptionsAndShowModal(currentComponent);
+    // } else {
+    //   setSelectedKey(key, isModifier);
+    // }
+
     // if (
     //   selectedKeys &&
     //   selectedKeys.length > 0 &&
@@ -316,17 +358,42 @@ class Container extends Component {
    * 组件的右键要求设置组件的值
    */
   handleRightMenuItemClick(componentKey, key, label) {
-    // loadOptionsAndShowModal(componentKey);
-    // debugger;
-    console.log(
-      "this.props.showContextMenuModal====",
-      this.props.showContextMenuModal
-    );
     // 显示context menu
     this.props.showContextMenuModal(true, {
       componentKey,
       key,
       label
+    });
+  }
+
+  /**
+   * 
+   * @param {*} componentKey 
+   * @param {*} key 
+   * @param {*} props 
+   * 直接设置props而不用弹窗设置
+   */
+  settingPropsDirectly(componentKey, key, props) {
+    this.props.changeOption(
+      {
+        key: componentKey
+      },
+      {
+        [key]: props
+      }
+    );
+  }
+  /**
+   * 
+   * @param {*} componentKey 
+   * @param {*} key 
+   * @param {*} props 
+   */
+  handleRightMenuItemClickArrayObject(componentKey, key, props) {
+    this.props.showContextMenuModal(true, {
+      componentKey,
+      key,
+      props
     });
   }
 
@@ -473,8 +540,7 @@ class Container extends Component {
 
   render() {
     const localStyle = {
-      ...this.props.style,
-      border: "5px solid red"
+      ...this.props.style
     };
     return <iframe style={localStyle} src="/structor-deskpage" />;
   }

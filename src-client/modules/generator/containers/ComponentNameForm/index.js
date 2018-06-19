@@ -14,160 +14,154 @@
  * limitations under the License.
  */
 
-import validator from 'validator';
-import {isEmpty} from 'lodash';
-import React, { Component, PropTypes } from 'react';
-import { connect } from 'react-redux';
-import { modelSelector } from './selectors.js';
-import { containerActions } from './actions.js';
+import validator from "validator";
+import { isEmpty } from "lodash";
+import React, { Component, PropTypes } from "react";
+import { connect } from "react-redux";
+import { modelSelector } from "./selectors.js";
+import { containerActions } from "./actions.js";
 
-import { Grid, Row, Col, Button } from 'react-bootstrap';
-import { InputTextStateful  } from 'components';
+import { Grid, Row, Col, Button } from "react-bootstrap";
+import { InputTextStateful } from "components";
 
 const cellBoxStyle = {
-    display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%'
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  width: "100%",
+  height: "100%"
 };
 
-const validateName = (value) => {
-    return value
-        && value.length > 0
-        && validator.isAlphanumeric(value);
+const validateName = value => {
+  return value && value.length > 0 && validator.isAlphanumeric(value);
 };
 
-const validateNonEmptyName = (value) => {
-    if (value && value.length > 0) {
-        return validator.isAlphanumeric(value);
-    }
-    return true;
+const validateNonEmptyName = value => {
+  if (value && value.length > 0) {
+    return validator.isAlphanumeric(value);
+  }
+  return true;
 };
 
 class Container extends Component {
+  constructor(props) {
+    super(props);
+    this.handleOnSubmit = this.handleOnSubmit.bind(this);
+  }
 
-    constructor(props) {
-        super(props);
-        this.handleOnSubmit = this.handleOnSubmit.bind(this);
+  /**
+     * 
+     * @param {*} e 
+     * 指定了组件类型+redux的key后需要做的处理(点击下一个页面)
+     */
+  handleOnSubmit(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    const {
+      generatorName,
+      generatorDirPath,
+      selectedComponentModel
+    } = this.props;
+    // 获取了generator的name
+    console.log('选中的脚手架为:',this.props);
+    const { namespaceInput, componentNameInput } = this;
+    const namespace = namespaceInput ? namespaceInput.getValue() : "";
+    const componentName = componentNameInput.getValue();
+    // 获取组件的名称和命名空间
+    this.props.pregenerate(
+      generatorName,
+      generatorDirPath,
+      namespace,
+      componentName,
+      selectedComponentModel
+    );
+  }
+
+  render() {
+    const {
+      componentName,
+      namespace,
+      availableComponentNames,
+      availableNamespaces
+    } = this.props;
+
+    let groupDataOptions = [];
+    if (availableNamespaces && availableNamespaces.length > 0) {
+      availableNamespaces.forEach((name, index) => {
+        groupDataOptions.push(<option key={index}>{name}</option>);
+      });
     }
-
-    handleOnSubmit(e) {
-        e.stopPropagation();
-        e.preventDefault();
-        const {generatorName, generatorDirPath, selectedComponentModel} = this.props;
-        const {namespaceInput, componentNameInput} = this;
-        const namespace = namespaceInput ? namespaceInput.getValue() : '';
-        const componentName = componentNameInput.getValue();
-        this.props.pregenerate(
-            generatorName,
-            generatorDirPath,
-            namespace,
-            componentName,
-            selectedComponentModel
-        );
+    let componentsDataOptions = [];
+    if (availableComponentNames && availableComponentNames.length > 0) {
+      availableComponentNames.forEach((name, index) => {
+        componentsDataOptions.push(<option key={index}>{name}</option>);
+      });
     }
+    let content = (
+      <Grid fluid={true}>
+        <Row style={{ position: "relative" }}>
+          <Col
+            xs={6}
+            md={6}
+            sm={6}
+            lg={6}
+            xsOffset={3}
+            mdOffset={3}
+            smOffset={3}
+            lgOffset={3}
+          >
+            <div style={cellBoxStyle}>
+              <div style={{ width: "70%", minWidth: "200px" }}>
+                <form onSubmit={this.handleOnSubmit}>
+                  <label htmlFor="componentNameInput" className="form-label">
+                    Component name
+                  </label>
+                  <InputTextStateful
+                    validateFunc={validateName}
+                    placeholder="Enter component name"
+                    id="componentNameInput"
+                    ref={me => (this.componentNameInput = me)}
+                    type="text"
+                    list="components"
+                    value={componentName}
+                    autoComplete="on"
+                  />
+                  <datalist id="components">{componentsDataOptions}</datalist>
 
-    render() {
-        const {
-            componentName,
-            namespace,
-            availableComponentNames,
-            availableNamespaces
-        } = this.props;
-
-        let groupDataOptions = [];
-        if (availableNamespaces && availableNamespaces.length > 0) {
-            availableNamespaces.forEach((name, index) => {
-                groupDataOptions.push(
-                    <option key={index}>{name}</option>
-                )
-            });
-        }
-        let componentsDataOptions = [];
-        if (availableComponentNames && availableComponentNames.length > 0) {
-            availableComponentNames.forEach((name, index) => {
-                componentsDataOptions.push(
-                    <option key={index}>{name}</option>
-                )
-            });
-        }
-        let content = (
-                <Grid fluid={ true }>
-                    <Row style={ { position: 'relative'} }>
-                        <Col
-                            xs={ 6 }
-                            md={ 6 }
-                            sm={ 6 }
-                            lg={ 6 }
-                            xsOffset={3}
-                            mdOffset={3}
-                            smOffset={3}
-                            lgOffset={3}
-                        >
-                            <div style={cellBoxStyle}>
-                                <div style={{width: '70%', minWidth: '200px'}}>
-                                    <form onSubmit={this.handleOnSubmit}>
-                                        <label
-                                            htmlFor="componentNameInput"
-                                            className="form-label"
-                                        >
-                                            Component name
-                                        </label>
-                                        <InputTextStateful
-                                            validateFunc={validateName}
-                                            placeholder="Enter component name"
-                                            id="componentNameInput"
-                                            ref={me => this.componentNameInput = me}
-                                            type="text"
-                                            list="components"
-                                            value={componentName}
-                                            autoComplete="on"
-                                        />
-                                        <datalist id="components">
-                                            {componentsDataOptions}
-                                        </datalist>
-
-                                        <label
-                                            htmlFor="groupNameInput"
-                                            className="form-label"
-                                        >
-                                            <span>
-                                                Add Component In Namespace (optional)
-                                            </span>
-                                        </label>
-                                        <InputTextStateful
-                                            validateFunc={validateNonEmptyName}
-                                            placeholder="Enter namespace"
-                                            id="groupNameInput"
-                                            ref={me => this.namespaceInput = me}
-                                            type="text"
-                                            list="groups"
-                                            value={namespace}
-                                            autoComplete="on"
-                                        />
-                                        <datalist id="groups">
-                                            {groupDataOptions}
-                                        </datalist>
-                                        <div style={{display: 'flex', justifyContent: 'center', marginTop: '2em'}}>
-                                            <Button
-                                                type="submit"
-                                                bsStyle="primary"
-                                            >
-                                                Go to next stage
-                                            </Button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </Col>
-                    </Row>
-                </Grid>
-            );
-        return (
-            <div>
-                {content}
+                  <label htmlFor="groupNameInput" className="form-label">
+                    <span>Add Component In Namespace (optional)</span>
+                  </label>
+                  <InputTextStateful
+                    validateFunc={validateNonEmptyName}
+                    placeholder="Enter namespace"
+                    id="groupNameInput"
+                    ref={me => (this.namespaceInput = me)}
+                    type="text"
+                    list="groups"
+                    value={namespace}
+                    autoComplete="on"
+                  />
+                  <datalist id="groups">{groupDataOptions}</datalist>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      marginTop: "2em"
+                    }}
+                  >
+                    <Button type="submit" bsStyle="primary">
+                      Go to next stage
+                    </Button>
+                  </div>
+                </form>
+              </div>
             </div>
-        );
-    }
-
+          </Col>
+        </Row>
+      </Grid>
+    );
+    return <div>{content}</div>;
+  }
 }
 
 export default connect(modelSelector, containerActions)(Container);
-

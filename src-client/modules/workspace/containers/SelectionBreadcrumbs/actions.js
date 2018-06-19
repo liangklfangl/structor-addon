@@ -18,6 +18,7 @@ export const SET_SELECTED_KEY = "SelectionBreadcrumbs/SET_SELECTED_KEY";
  */
 export const setSelectedKey = (key, isModifier) => (dispatch, getState) => {
   let { selectionBreadcrumbs: { selectedKeys } } = getState();
+  console.log("获取选中的selectedKeys====", selectedKeys);
   let filtered = selectedKeys.filter(selectedKey => key === selectedKey);
   if (filtered.length === 0) {
     if (selectedKeys.length > 0 && !isModifier) {

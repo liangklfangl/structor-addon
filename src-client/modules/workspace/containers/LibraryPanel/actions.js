@@ -18,6 +18,7 @@ export const TOGGLE_PANEL_GROUP = "LibraryPanel/TOGGLE_PANEL_GROUP";
 export const TOGGLE_ITEM_GROUP = "LibraryPanel/TOGGLE_ITEM_GROUP";
 export const ADD_RECENTLY_USED = "LibraryPanel/ADD_RECENTLY_USED";
 
+// 重新加载左侧的组件列表
 export const loadComponents = () => ({ type: LOAD_COMPONENTS });
 export const togglePanelGroup = key => ({
   type: TOGGLE_PANEL_GROUP,

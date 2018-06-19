@@ -4,6 +4,8 @@ export ComponentControls from "modules/workspace/containers/ComponentControls";
 export ComponentOptionsModal from "modules/workspace/containers/ComponentOptionsModal";
 export ContextMenuModel from "modules/workspace/containers/ContextMenuModel";
 // context menu
+export ActionDispatchModal from "modules/workspace/containers/ActionDispatchModal";
+// dispatch Action
 export ComponentOptionsPanel from "modules/workspace/containers/ComponentOptionsPanel";
 export Desk from "modules/workspace/containers/Desk";
 export DeskPage from "modules/workspace/containers/DeskPage";

@@ -30,6 +30,7 @@ export default (state = initialState, action = {}) => {
   }
 
   if (type === actions.CHANGE_PAGE_ROUTE) {
+    console.log('CHANGE_PAGE_ROUTE===',payload);
     return Object.assign({}, state, {
       pagePathToChange: payload
     });
@@ -94,6 +95,7 @@ export default (state = initialState, action = {}) => {
     });
   }
 
+  // 重新加载页面
   if (type === actions.SET_RELOAD_PAGE_REQUEST) {
     return Object.assign({}, state, {
       reloadPageRequest: true

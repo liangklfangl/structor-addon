@@ -9,6 +9,7 @@ import {
   ComponentOptionsModal,
   ContextMenuModel,
   QuickAppendModal,
+  ActionDispatchModal,
   SaveDefaultModelModal
 } from "modules/workspace";
 import { Generator } from "modules/generator";
@@ -49,6 +50,8 @@ class Container extends Component {
             <ComponentOptionsModal />
             <ContextMenuModel />
             {/* Context menu内容 */}
+            <ActionDispatchModal />
+            {/* 数据+行为组件 */}
             <ProxySetupModal />
             <QuickAppendModal />
             <SaveDefaultModelModal />

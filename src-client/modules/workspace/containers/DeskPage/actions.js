@@ -39,6 +39,8 @@ import {
 } from "modules/workspace/containers/ComponentOptionsPanel/actions";
 import { showContextMenuModal } from "modules/workspace/containers/ContextMenuModel/actions.js";
 // context menu
+import { showActionDispatch } from "modules/workspace/containers/ActionDispatchModal/actions.js";
+// 行为组件
 export const SET_PAGES = "DeskPage/SET_PAGES";
 export const RELOAD_PAGE = "DeskPage/RELOAD_PAGE";
 export const LOAD_PAGE = "DeskPage/LOAD_PAGE";
@@ -71,6 +73,7 @@ export const changePageRoute = pagePath => ({
 export const setLivePreviewModeOn = () => ({ type: SET_LIVE_PREVIEW_MODE_ON });
 // 设置预览效果
 export const setEditModeOn = () => ({ type: SET_EDIT_MODE_ON });
+// 重新加载页面
 export const setReloadPageRequest = () => ({ type: SET_RELOAD_PAGE_REQUEST });
 export const executeReloadPageRequest = () => ({
   type: EXECUTE_RELOAD_PAGE_REQUEST
@@ -84,6 +87,16 @@ export const showContextMenuSetting = (isShow, addOn = {}) => (
   getState
 ) => {
   dispatch(showContextMenuModal(isShow, addOn));
+};
+
+/**
+ * 显示context menu
+ */
+export const showActionDispatchModal = (isShow, addOn = {}) => (
+  dispatch,
+  getState
+) => {
+  dispatch(showActionDispatch(isShow, addOn));
 };
 export const updatePage = () => ({ type: UPDATE_PAGE });
 // 更新页面
@@ -266,6 +279,8 @@ export const containerActions = dispatch =>
       pasteLast,
       pasteReplace,
       showContextMenuModal: showContextMenuSetting,
+      showActionDispatchModal,
+      // 数据组件+行为组件
       cloneSelected,
       deleteSelected,
       showQuickAppend,

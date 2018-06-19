@@ -24,13 +24,14 @@ class Container extends Component {
     e.stopPropagation();
     e.preventDefault();
     const { currentComponent, loadOptionsAndShowModal } = this.props;
+    console.log("编辑时候currentComponent=====", currentComponent);
     loadOptionsAndShowModal(currentComponent);
   }
 
   /**
    * 
    * @param {*} e 
-   * loadGenerators
+   * loadGenerators用于展示应用提供的Generator用于选择
    */
   onGenerate(e) {
     e.stopPropagation();
@@ -38,7 +39,6 @@ class Container extends Component {
     const { loadGenerators } = this.props;
     loadGenerators();
   }
-
   /**
    * 
    * @param {*} e
@@ -64,10 +64,10 @@ class Container extends Component {
         >
           <span style={buttonLabelStyle}>
             <i className="fa fa-wrench" />
-            <span style={{ marginLeft: "0.5em" }}>Edit</span>
+            <span style={{ marginLeft: "0.5em" }}>编辑</span>
           </span>
         </button>
-        {/* 产生组件 */}
+        {/* 产生组件,抽取组件 */}
         <button
           className="btn btn-default btn-xs"
           disabled={!currentComponent}

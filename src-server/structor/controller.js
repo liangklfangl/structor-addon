@@ -3,6 +3,7 @@ import rewrite from "express-urlrewrite";
 import httpProxy from "http-proxy";
 import { sortBy } from "lodash";
 import { config, storage, commons, gengine } from "structor-commons";
+// 专门控制本地存储的storage对象
 import * as gengineManager from "../commons/gengine";
 import * as middlewareCompilerManager from "./middlewareCompilerManager.js";
 import * as extractManager from "./extractManager.js";
@@ -163,10 +164,15 @@ export function writeComponentSourceCode(options) {
 }
 
 export function saveProjectModel(options) {
-  console.log('src-server的saveProjectModel被调用~~~~');
+  console.log("src-server的saveProjectModel被调用~~~~");
   return storage.writeProjectJsonModel(options.model);
 }
 
+/**
+ * 
+ * @param {*} options 
+ * serverAPI
+ */
 export function pregenerate(options) {
   const {
     generatorName,
@@ -229,6 +235,11 @@ export function generateApplication(options) {
     });
 }
 
+/**
+ * 
+ * @param {*} options 
+ * 将产生的文件保存起来
+ */
 export function saveGenerated(options) {
   const { files, dependencies } = options;
   return storage.saveGenerated(dependencies, files);

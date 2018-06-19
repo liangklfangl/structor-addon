@@ -25,6 +25,8 @@ import libraryControlsReducer from "modules/workspace/containers/LibraryControls
 import libraryPanelReducer from "modules/workspace/containers/LibraryPanel/reducer";
 import componentOptionsModalReducer from "modules/workspace/containers/ComponentOptionsModal/reducer";
 import componentContextMenuModalReducer from "modules/workspace/containers/ContextMenuModel/reducer";
+// 行为
+import componentActionDispatchModal from "modules/workspace/containers/ActionDispatchModal/reducer";
 import componentControlsReducer from "modules/workspace/containers/ComponentControls/reducer";
 import componentOptionsPanelReducer from "modules/workspace/containers/ComponentOptionsPanel/reducer";
 import generatorReducer from "modules/generator/containers/Generator/reducer";
@@ -68,6 +70,8 @@ const reducer = combineReducers({
   libraryPanel: libraryPanelReducer,
   componentOptionsModal: componentOptionsModalReducer,
   contextMenuModal: componentContextMenuModalReducer,
+  actionDispatchModal: componentActionDispatchModal,
+  // 行为model
   componentControls: componentControlsReducer,
   componentOptionsPanel: componentOptionsPanelReducer,
   generator: generatorReducer,

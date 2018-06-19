@@ -9,6 +9,9 @@ export function getProjectInfo() {
   return invokeStructor("getConfig");
 }
 
+/**
+ * 得到项目的model数据
+ */
 export function getProjectModel() {
   return invokeStructor("getModel");
 }
@@ -31,7 +34,9 @@ export function exportProjectModel(model) {
 export function setProxyURL(proxyURL) {
   return invokeStructor("setProxyURL", { proxyURL });
 }
-
+/**
+ * 组件树
+ */
 export function loadComponentTree() {
   return invokeStructor("getComponentTree", {});
 }
@@ -119,6 +124,11 @@ export function generate(
   });
 }
 
+/**
+ * 保存已经产生的redux文件
+ * @param {*} files 
+ * @param {*} dependencies 
+ */
 export function saveGenerated(files, dependencies) {
   return invokeStructor("saveGenerated", { files, dependencies });
 }
