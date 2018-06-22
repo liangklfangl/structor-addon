@@ -94,6 +94,43 @@ export const changeOptionDragResize = (componentObject, optionObject) => (
 };
 
 /**
+ * 根据多个componentKey修改配置
+ */
+export const changeOptions = (componentObject, optionArray) => (
+  dispatch,
+  getState
+) => {
+  const { key1, key2 } = componentObject;
+  let node1 = graphApi.getNode(key1);
+  let node2 = graphApi.getNode(key2);
+  if (node1 && node2) {
+    let oldProps1 = node1.modelNode.props || {};
+    let oldProps2 = node2.modelNode.props || {};
+    let newProps1 = merge({}, oldProps1, optionArray[0]);
+    let newProps2 = merge({}, oldProps2, optionArray[1]);
+    // 没有style直接删除
+    if (newProps1.style && isEmpty(newProps1.style)) {
+      delete newProps1.style;
+    }
+    if (newProps2.style && isEmpty(newProps2.style)) {
+      delete newProps2.style;
+    }
+    console.log("修改后两个props为===", newProps1, newProps2);
+    dispatch(pushHistory());
+    // 添加一条历史
+    node1.modelNode.props = newProps1;
+    node2.modelNode.props = newProps2;
+    // 重新设置props
+    dispatch(setSelectedKey(key1));
+    dispatch(setSelectedKey(key2));
+    dispatch(updatePage());
+    // 设置当前选中的key并更新页面
+  } else {
+    dispatch(failed("Component with key " + key1+ " was not found."));
+  }
+};
+
+/**
  * 修改Options
  */
 export const changeOption = (componentObject, optionObject) => (
@@ -162,6 +199,7 @@ export const containerActions = dispatch =>
     {
       deleteOption,
       changeOption,
+      changeOptions,
       setActiveTab,
       toggleStyleSection,
       addChildren

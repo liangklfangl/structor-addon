@@ -143,12 +143,10 @@ class Container extends Component {
         /**
          * 选择一个行为组件+数据组件的弹窗
          */
-        page.bindToState("dispatchAction", currentPath => {
-          console.log("dispatchAction~~~~", currentPath);
+        page.bindToState("dispatchAction", payload => {
+          console.log("dispatchAction~~~~", payload);
           const { showActionDispatchModal } = this.props;
-          showActionDispatchModal(true, {
-            currentPath
-          });
+          showActionDispatchModal(true, payload);
         });
         //绑定各种事件到initialState中，然后从内部可以调用这些方法!
         page.bindToState("onLoadOptions", (key, isModifier) => {

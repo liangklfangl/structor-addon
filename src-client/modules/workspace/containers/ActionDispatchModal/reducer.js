@@ -21,9 +21,10 @@ function filterFieldsByCurrentPath(pages, currentPath) {
     []
   ).filter((el, index) => {
     const props = el.props;
+    const { key } = props || {};
     const { fieldName, fieldDesc } = props.name || {};
     if (fieldName && fieldDesc) {
-      fields.push({ fieldName, fieldDesc });
+      fields.push({ fieldName, fieldDesc, key });
     }
   }, []);
   return fields;
@@ -35,17 +36,19 @@ export default (state = initialState, action = {}) => {
   const { type, payload, addOn } = action;
   if (type === actions.SHOW_ACTION_DISPATCH_MODEL) {
     console.log("SHOW_ACTION_DISPATCH_MODEL中的值为", action);
+    const { show, payload } = action;
     // 行为组件+数据组件
     return Object.assign({}, state, {
-      actionDispatchShow: payload,
-      addOn
+      actionDispatchShow: show,
+      addOn: payload
     });
   } else if (type === actions.GET_ACTION_DISPATCH_MODEL_DATA) {
+    // 显示页面所有的字段
     const payload = action.payload || {};
     const { pages } = payload.data;
-    const { currentPath } = payload.addOn || {};
-    console.log("SHOW_ACTION_DISPATCH_MODE中的值为2", action, pages, currentPath);
-    const filteredFields = filterFieldsByCurrentPath(pages, currentPath);
+    const { pageName } = payload.addOn || {};
+    console.log("SHOW_ACTION_DISPATCH_MODE中的值为2", action, pages, pageName);
+    const filteredFields = filterFieldsByCurrentPath(pages, pageName);
     console.log("filteredFields===", filteredFields);
     return Object.assign({}, state, {
       fields: filteredFields

@@ -7,18 +7,20 @@ export const GET_ACTION_DISPATCH_MODEL_DATA =
   "ComponentOptionsPanel/GET_ACTION_DISPATCH_MODEL_DATA";
 export const MUTATION_ACTION_DISPATCH_MODEL_DATA =
   "ComponentOptionsPanel/MUTATION_ACTION_DISPATCH_MODEL_DATA";
+// 直接修改props的action
+import { changeOptions } from "modules/workspace/containers/ComponentOptionsPanel/actions";
 /**
  * 
  * @param {*} isShow
  * 行为+数据组件 
  */
-export const showActionDispatch = (isShow, addOn) => (dispatch, getState) => {
+export const showActionDispatch = (show, payload) => (dispatch, getState) => {
   dispatch({
     type: SHOW_ACTION_DISPATCH_MODEL,
-    payload: isShow,
-    addOn: addOn
+    show,
+    payload
   });
-  dispatch(showPageFieldsDispatch(isShow, addOn));
+  dispatch(showPageFieldsDispatch(show, payload));
 };
 
 /**
@@ -53,7 +55,8 @@ export const containerActions = dispatch =>
   bindActionCreators(
     {
       showPageFieldsDispatch,
-      mutationActionState
+      mutationActionState,
+      changeOptions
     },
     dispatch
   );

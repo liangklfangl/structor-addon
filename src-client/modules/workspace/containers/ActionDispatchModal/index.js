@@ -4,27 +4,14 @@ import { Modal, Tabs, Tab, Button } from "react-bootstrap";
 import React, { Component, PropTypes } from "react";
 import { connect } from "react-redux";
 import Table from "./Table";
-const mockData = [
-  {
-    description: "搜索名称",
-    key: "name"
-  },
-  {
-    description: "年龄",
-    key: "age"
-  }
-];
 
-const targetKeys = mockData
-  .filter(item => +item.key % 3 > 1)
-  .map(item => item.key);
 class ContextMenuModel extends React.Component {
   state = { value: "", mockFields: [] };
   localeProps = {};
   /**
    * 得到props内容
    */
-  getProps = props => {
+  receiveNew = props => {
     this.localeProps = props;
     console.log("上层组件得到的值为==", props);
   };
@@ -82,22 +69,45 @@ class ContextMenuModel extends React.Component {
       `;
   };
   /**
-   * 保存将数据,根据文本框的值进行输入
+   * 修改行为组件+数据组件的events+eventsSettings配置
    */
   handleOk = e => {
     const {
       addOn = {},
       showContextMenu = false
     } = this.props.actionDispatchModal;
-    const { label, key, componentKey } = addOn;
-    console.log("弹窗设置的值为====", key, this.localeProps);
-    this.props.changeOption &&
-      this.props.changeOption(
-        { key: componentKey },
+    const { pageName, behaviorKey, dataKey } = addOn;
+    const { behavior, data } = this.localeProps;
+
+    const fields =
+      this.props.actionDispatchModal && this.props.actionDispatchModal.fields;
+    // 对象集合
+    const stateQueryParams = this.localeProps.behavior.targetKeys;
+    const queryFields = fields.filter((el, idx) => {
+      return this.localeProps.behavior.targetKeys.indexOf(el.fieldName) != -1;
+    });
+
+    // 设置行为组件+数据组件的props
+    const event = `${pageName}` + "_" + behaviorKey;
+    const localePropsCpy = JSON.parse(JSON.stringify(this.localeProps));
+    localePropsCpy.behavior.targetKeys = queryFields;
+    console.log("弹窗设置的值为====", localePropsCpy);
+    this.props.changeOptions(
+      {
+        key1: dataKey,
+        key2: behaviorKey
+      },
+      [
         {
-          [key]: this.localeProps
+          events: [event],
+          eventsSettings: localePropsCpy["data"]
+        },
+        {
+          events: [event],
+          eventsSettings: localePropsCpy["behavior"]
         }
-      );
+      ]
+    );
     setTimeout(() => {
       this.hideContextModel();
       this.setState({
@@ -155,7 +165,7 @@ class ContextMenuModel extends React.Component {
   render() {
     console.log("actionDispathModel中的值为===", this.props);
     const { actionDispatchModal, addOn = {} } = this.props;
-    const { label } = addOn;
+    const { behaviorKey, dataKey, pageName } = addOn;
     const { actionDispatchShow, fields = [] } = actionDispatchModal;
     return (
       <div className="action__dispatch--modal">
@@ -171,7 +181,8 @@ class ContextMenuModel extends React.Component {
           <Modal.Body>
             <Table
               mockData={this.generateSearchKeys(fields)}
-              targetKeys={targetKeys}
+              targetKeys={[]}
+              receiveNew={this.receiveNew}
             />
           </Modal.Body>
           <Modal.Footer>
