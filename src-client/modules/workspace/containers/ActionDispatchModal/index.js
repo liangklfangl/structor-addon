@@ -163,10 +163,11 @@ class ContextMenuModel extends React.Component {
   };
 
   render() {
-    console.log("actionDispathModel中的值为===", this.props);
-    const { actionDispatchModal, addOn = {} } = this.props;
+    const { actionDispatchModal } = this.props;
+    const { addOn } = actionDispatchModal;
     const { behaviorKey, dataKey, pageName } = addOn;
     const { actionDispatchShow, fields = [] } = actionDispatchModal;
+    console.log("组件传入定位", behaviorKey, dataKey, this.props);
     return (
       <div className="action__dispatch--modal">
         <style dangerouslySetInnerHTML={{ __html: this.getStyle() }} />
@@ -182,6 +183,8 @@ class ContextMenuModel extends React.Component {
             <Table
               mockData={this.generateSearchKeys(fields)}
               targetKeys={[]}
+              dataKey={dataKey}
+              behaviorKey={behaviorKey}
               receiveNew={this.receiveNew}
             />
           </Modal.Body>

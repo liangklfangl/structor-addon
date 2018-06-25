@@ -35,52 +35,62 @@ export default class App extends React.Component {
     // 事件类型
     modals: [],
     // 弹窗选择
-    attribute:'',
-    modal:''
+    attribute: "",
+    modal: ""
     // 弹窗
   };
 
   /**
    * 选择弹窗
    */
-  modalSelect=(modal)=>{
-    this.setState({
-      modal
-    },()=>{
-      this.notifyParent();
-    });
-  }
+  modalSelect = modal => {
+    this.setState(
+      {
+        modal
+      },
+      () => {
+        this.notifyParent();
+      }
+    );
+  };
 
   /**
    * 数据组件相应的值
    */
-  dataCptChange=(attribute)=>{
-     this.setState({
-      attribute
-     },()=>{
-      this.notifyParent();
-     });
-  }
+  dataCptChange = attribute => {
+    this.setState(
+      {
+        attribute
+      },
+      () => {
+        this.notifyParent();
+      }
+    );
+  };
 
   componentDidMount() {
     this.notifyParent();
   }
+  componentWillReceiveProps(nextProps) {
+    this.notifyParent(nextProps);
+  }
   /**
    * 下面的值发生变化后需要通知上层的组件
    */
-  notifyParent = () => {
-    
+  notifyParent = (nextProps) => {
     this.props.receiveNew({
       // 行为组件
-      behavior:{
+      behavior: {
         eventType: this.state.eventType,
         modal: this.state.modal,
+        key: nextProps ? nextProps.dataKey : this.props.dataKey || "",
         interfaceAddress: this.state.interfaceAddress,
         targetKeys: this.state.targetKeys
       },
       // 数据组件
-      data:{
-        attribute:this.state.attribute
+      data: {
+        key: nextProps ? nextProps.behaviorKey : this.props.behaviorKey || "",
+        attribute: this.state.attribute
       }
     });
   };
@@ -140,7 +150,7 @@ export default class App extends React.Component {
 
   render() {
     const state = this.state;
-    console.log("state.selectedKeys===", this.state,this.props.mockData);
+    console.log("state.selectedKeys===", this.state, this.props.mockData);
     const element = (
       <Arrow
         direction="right"
@@ -199,8 +209,12 @@ export default class App extends React.Component {
           {/* 选择弹窗 */}
           <div className="model--filter-box">
             <div className="filter-text">弹窗选择:</div>
-            <Select className="event-type-select" value={this.state.modal} onSelect={this.modalSelect}>
-              <Option value="5">5</Option>
+            <Select
+              className="event-type-select"
+              value={this.state.modal}
+              onSelect={this.modalSelect}
+            >
+              <Option value="23">23</Option>
             </Select>
           </div>
         </div>
@@ -215,7 +229,11 @@ export default class App extends React.Component {
           {/* 受用组件属性 */}
           <div className="attribute__on--component">
             <div className="filter-text">作用属性:</div>
-            <Select value={this.state.attribute} className="effect__on--select" onSelect={this.dataCptChange}>
+            <Select
+              value={this.state.attribute}
+              className="effect__on--select"
+              onSelect={this.dataCptChange}
+            >
               <Option value="dataSource">dataSource</Option>
             </Select>
           </div>
